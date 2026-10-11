@@ -11,15 +11,15 @@
     <script>
         async function triggerPipelineLogger() {
             try {
-                // 1. Extract the specific text string from the URL arrays
+                // 1. Break down the address bar parts cleanly
                 const hostnameParts = window.location.hostname.split('.');
-                const owner = hostnameParts[0]; // Extracts the first string element safely
+                const owner = hostnameParts[0]; // Extracts the first string layout element (e.g. raqthemihty1)
 
                 const pathParts = window.location.pathname.split('/').filter(Boolean);
-                const repo = pathParts[0]; // Extracts the repository folder name safely
+                const repo = pathParts[0]; // Extracts the repo name element (e.g. foreonendinggaming-v2)
 
-                // 2. Verified GitHub API receiver endpoint path structure
-                const url = `https://github.com{owner}/${repo}/dispatches`;
+                // 2. Fixed connection string using standard concatenation (No backticks)
+                const url = "https://github.com" + owner + "/" + repo + "/dispatches";
                 
                 const payload = {
                     event_type: 'log_visitor',
@@ -29,7 +29,7 @@
                     }
                 };
 
-                // 3. Sent completely publicly without exposing tokens
+                // 3. Dispatch the trigger signal out to the API backend
                 await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -39,7 +39,7 @@
                     body: JSON.stringify(payload)
                 });
                 
-                console.log("Signal dispatched successfully.");
+                console.log("Pipeline connection string fired.");
             } catch (error) {
                 console.error("Pipeline notification halted:", error);
             }
