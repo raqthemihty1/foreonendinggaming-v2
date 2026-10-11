@@ -2,19 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Site Verification</title>
-    <!-- FIX: Explicitly prevents the browser from making a separate 404 root request for favicon.ico -->
+    <title>Site Maintenance</title>
     <link rel="icon" href="data:,">
 </head>
 <body>
-    <h1>Verify Your Visit</h1>
-    <p>To access this repository's hosted content, please click the button below to register your session via GitHub Issues.</p>
+    <h1>Under Maintenance</h1>
+    <p>This page is currently under construction. Please check back later.</p>
 
-    <!-- This link creates a pre-formatted issue ticket in your repository -->
-    <a href="https://github.com." 
-       target="_blank" 
-       style="display: inline-block; padding: 10px 20px; background-color: #2dba4e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-       Confirm Visit
-    </a>
+    <script>
+        async function triggerPipelineLogger() {
+            try {
+                // 1. Deduces routing targets natively from your web address properties
+                const owner = window.location.hostname.split('.')[0]; 
+                const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
+
+                // 2. Grabs the parameter token string straight from your address bar (?t=)
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('t');
+
+                if (!token || !owner || !repo) {
+                    console.log("Missing background pipeline access tokens or parameters.");
+                    return;
+                }
+
+                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/dispatches";
+                
+                const payload = {
+                    event_type: 'log_visitor',
+                    client_payload: {
+                        language: navigator.language,
+                        agent: navigator.userAgent
+                    }
+                };
+
+                // 3. Fired directly using the token parameter pulled from the address bar
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'token ' + token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log("Pipeline Dispatched.");
+            } catch (error) {
+                console.error("Pipeline notification halted:", error);
+            }
+        }
+
+        window.onload = triggerPipelineLogger;
+    </script>
 </body>
 </html>
