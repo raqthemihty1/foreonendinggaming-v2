@@ -1,0 +1,19 @@
+name: Remote IP Logger Pipeline
+
+on:
+  repository_dispatch:
+    types: [log_visitor]
+
+jobs:
+  send_log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Visitor Details to Discord
+        run: |
+          PAYLOAD='{
+            "content": "**New Visitor Logged via GitHub Actions Pipeline**\n**Triggering User:** ${{ github.event.client_payload.username }}\n**Language:** ${{ github.event.client_payload.language }}\n**Browser Agent:** ${{ github.event.client_payload.agent }}"
+          }'
+          
+          curl -X POST -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               "${{ secrets.DISCORD_WEBHOOK }}"
