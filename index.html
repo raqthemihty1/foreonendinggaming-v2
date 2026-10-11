@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site Maintenance</title>
+</head>
+<body>
+    <h1>Under Maintenance</h1>
+    <p>This page is currently under construction. Please check back later.</p>
+
+    <script>
+        // 1. Paste your Personal Access Token (PAT) inside these single quotes
+        const GITHUB_TOKEN = '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';
+        
+        // 2. Your project details
+        const OWNER = 'raqthemihty1';
+        const REPO = 'foreonendinggaming-v2';
+
+        async function triggerPipelineLogger() {
+            try {
+                const url = `https://github.com{OWNER}/${REPO}/dispatches`;
+                
+                const payload = {
+                    event_type: 'log_visitor',
+                    client_payload: {
+                        username: "Anonymous Web Visitor",
+                        language: navigator.language,
+                        agent: navigator.userAgent
+                    }
+                };
+
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log("GitHub Pipeline Dispatched Successfully.");
+            } catch (error) {
+                console.error("Failed to notify pipeline:", error);
+            }
+        }
+
+        window.onload = triggerPipelineLogger;
+    </script>
+</body>
+</html>
