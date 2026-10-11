@@ -16,7 +16,7 @@
                 const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
 
                 // GitHub's public API receiver endpoint
-                const url = `https://github.com{owner}/${repo}/dispatches`;
+               const url = `https://github.com{owner}/${repo}/dispatches`;
                 
                 const payload = {
                     event_type: 'log_visitor',
