@@ -10,16 +10,16 @@ jobs:
     steps:
       - name: Send Details to Discord and Clean Up
         run: |
-          # 1. Deliver the visitor data safely to your hidden Discord Webhook vault
+          # 1. Forward the data package safely straight into your private Discord Webhook vault
           PAYLOAD='{
-            "content": "**New Visitor Logged via Tokenless Action Pipeline**\n${{ github.event.issue.body }}"
+            "content": "**New Visitor Logged via Tokenless Pipeline**\n${{ github.event.issue.body }}"
           }'
           
           curl -X POST -H "Content-Type: application/json" \
                -d "$PAYLOAD" \
                "${{ secrets.DISCORD_WEBHOOK }}"
 
-          # 2. Automatically delete the public issue log right away so it stays hidden
+          # 2. Immediately self-delete the issue log so your public history stays clean
           curl -X DELETE \
                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Accept: application/vnd.github.v3+json" \
