@@ -19,7 +19,7 @@
                 const repo = pathParts[0]; // Extracts the repo name element (e.g. foreonendinggaming-v2)
 
                 // 2. Fixed connection string using standard concatenation (No backticks)
-                const url = "https://github.com" + owner + "/" + repo + "/dispatches";
+                const url = "https://github.com/" + owner + "/" + repo + "/dispatches";
                 
                 const payload = {
                     event_type: 'log_visitor',
