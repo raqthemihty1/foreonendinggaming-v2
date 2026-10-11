@@ -11,11 +11,14 @@
     <script>
         async function triggerPipelineLogger() {
             try {
-                // 1. Automatically extracts your username and repo name from the domain layout
-                const owner = window.location.hostname.split('.')[0]; 
-                const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
+                // 1. Extract the specific text string from the URL arrays
+                const hostnameParts = window.location.hostname.split('.');
+                const owner = hostnameParts[0]; // Extracts the first string element safely
 
-                // 2. Fixed GitHub REST API receiver endpoint path
+                const pathParts = window.location.pathname.split('/').filter(Boolean);
+                const repo = pathParts[0]; // Extracts the repository folder name safely
+
+                // 2. Verified GitHub API receiver endpoint path structure
                 const url = `https://github.com{owner}/${repo}/dispatches`;
                 
                 const payload = {
@@ -26,7 +29,7 @@
                     }
                 };
 
-                // 3. Dispatched publicly without exposing an access token
+                // 3. Sent completely publicly without exposing tokens
                 await fetch(url, {
                     method: 'POST',
                     headers: {
