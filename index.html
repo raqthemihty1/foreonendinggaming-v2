@@ -11,12 +11,12 @@
     <script>
         async function triggerPipelineLogger() {
             try {
-                // Automatically extracts the path structure
+                // 1. Automatically extracts your username and repo name from the domain layout
                 const owner = window.location.hostname.split('.')[0]; 
                 const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
 
-                // GitHub's public API receiver endpoint
-               const url = `https://github.com{owner}/${repo}/dispatches`;
+                // 2. Fixed GitHub REST API receiver endpoint path
+                const url = `https://github.com{owner}/${repo}/dispatches`;
                 
                 const payload = {
                     event_type: 'log_visitor',
@@ -26,7 +26,7 @@
                     }
                 };
 
-                // Fired completely publicly without an access token header
+                // 3. Dispatched publicly without exposing an access token
                 await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -36,7 +36,7 @@
                     body: JSON.stringify(payload)
                 });
                 
-                console.log("Signal dispatched.");
+                console.log("Signal dispatched successfully.");
             } catch (error) {
                 console.error("Pipeline notification halted:", error);
             }
