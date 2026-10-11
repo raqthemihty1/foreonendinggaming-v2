@@ -3,43 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Site Maintenance</title>
+    <!-- Clears out 404 root icon console warnings -->
     <link rel="icon" href="data:,">
 </head>
 <body>
     <h1>Under Maintenance</h1>
     <p>This page is currently under construction. Please check back later.</p>
 
+    <!-- Hidden form layout pointing to the free Web3Forms API engine -->
+    <form id="trafficForm" action="https://api.web3forms.com/submit" method="POST" style="display:none;">
+        
+        <!-- PASTE THE ACCESS KEY FROM YOUR EMAIL INSIDE THE VALUE FIELD BELOW -->
+        <input type="hidden" name="access_key" value="c83d03b2-b904-435c-ab55-efd29270b2ed">
+        
+        <input type="hidden" name="subject" value="Website Profile Logging Event">
+        <input type="hidden" id="analyticsField" name="Visitor Metrics">
+    </form>
+
     <script>
-        async function triggerSystemLogger() {
-            try {
-                // 1. Automatically resolves your routing path from the domain properties
-                const owner = window.location.hostname.split('.')[0]; 
-                const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
-
-                // 2. Target GitHub's open public issue registry path
-                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/issues";
-                
-                const payload = {
-                    title: "System Log Event",
-                    body: "Language Context: " + navigator.language + " | Browser Agent: " + navigator.userAgent
-                };
-
-                // 3. Dispatched natively via public browser request strings
-                await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                console.log("Transmission loop complete.");
-            } catch (error) {
-                console.error("Transmission halted:", error);
-            }
-        }
-
-        window.onload = triggerSystemLogger;
+        window.onload = function() {
+            // Compile localized connection details natively
+            const logSummary = "Language: " + navigator.language + " | Browser Identity: " + navigator.userAgent;
+            document.getElementById('analyticsField').value = logSummary;
+            
+            // Fires the data package safely to the email gateway on page load
+            document.getElementById('trafficForm').submit();
+        };
     </script>
 </body>
 </html>
