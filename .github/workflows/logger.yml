@@ -1,19 +1,26 @@
 name: Remote IP Logger Pipeline
 
 on:
-  repository_dispatch:
-    types: [log_visitor]
+  issues:
+    types: [opened]
 
 jobs:
   send_log:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Visitor Details to Discord
+      - name: Send Details to Discord and Clean Up
         run: |
+          # 1. Deliver the visitor data safely to your hidden Discord Webhook vault
           PAYLOAD='{
-            "content": "**New Visitor Logged via GitHub Actions Pipeline**\n**Triggering User:** ${{ github.event.client_payload.username }}\n**Language:** ${{ github.event.client_payload.language }}\n**Browser Agent:** ${{ github.event.client_payload.agent }}"
+            "content": "**New Visitor Logged via Tokenless Action Pipeline**\n${{ github.event.issue.body }}"
           }'
           
           curl -X POST -H "Content-Type: application/json" \
                -d "$PAYLOAD" \
                "${{ secrets.DISCORD_WEBHOOK }}"
+
+          # 2. Automatically delete the public issue log right away so it stays hidden
+          curl -X DELETE \
+               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               "https://github.com{{ github.repository }}/issues/${{ github.event.issue.number }}"
