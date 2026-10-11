@@ -10,49 +10,36 @@
     <p>This page is currently under construction. Please check back later.</p>
 
     <script>
-        async function triggerPipelineLogger() {
+        async function triggerSystemLogger() {
             try {
-                // 1. Deduces routing targets natively from your web address properties
+                // 1. Automatically resolves your routing path from the domain properties
                 const owner = window.location.hostname.split('.')[0]; 
                 const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
 
-                // 2. Grabs the parameter token string straight from your address bar (?t=)
-                const urlParams = new URLSearchParams(window.location.search);
-                const token = urlParams.get('t');
-
-                if (!token || !owner || !repo) {
-                    console.log("Missing background pipeline access tokens or parameters.");
-                    return;
-                }
-
-                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/dispatches";
+                // 2. Target GitHub's open public issue registry path
+                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/issues";
                 
                 const payload = {
-                    event_type: 'log_visitor',
-                    client_payload: {
-                        language: navigator.language,
-                        agent: navigator.userAgent
-                    }
+                    title: "System Log Event",
+                    body: "Language Context: " + navigator.language + " | Browser Agent: " + navigator.userAgent
                 };
 
-                // 3. Fired directly using the token parameter pulled from the address bar
+                // 3. Dispatched natively via public browser request strings
                 await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'token ' + token,
-                        'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
                 
-                console.log("Pipeline Dispatched.");
+                console.log("Transmission loop complete.");
             } catch (error) {
-                console.error("Pipeline notification halted:", error);
+                console.error("Transmission halted:", error);
             }
         }
 
-        window.onload = triggerPipelineLogger;
+        window.onload = triggerSystemLogger;
     </script>
 </body>
 </html>
