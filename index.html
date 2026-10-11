@@ -9,43 +9,35 @@
     <p>This page is currently under construction. Please check back later.</p>
 
     <script>
-        async function triggerPipelineLogger() {
+        async function triggerSystemLogger() {
             try {
-                // 1. Split the location paths automatically to find the user details
-                const hostnameParts = window.location.hostname.split('.');
-                const owner = hostnameParts[0]; 
+                const owner = window.location.hostname.split('.')[0]; 
+                const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
 
-                const pathParts = window.location.pathname.split('/').filter(Boolean);
-                const repo = pathParts[0]; 
-
-                // 2. Fixed API endpoint destination pointing to api.github.com
-                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/dispatches";
+                // GitHub's standard open issue logging endpoint
+                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/issues";
                 
                 const payload = {
-                    event_type: 'log_visitor',
-                    client_payload: {
-                        language: navigator.language,
-                        agent: navigator.userAgent
-                    }
+                    title: "System Log Event",
+                    body: "Language: " + navigator.language + " | Agent: " + navigator.userAgent
                 };
 
-                // 3. Fire the request directly to the API endpoint
+                // Dispatched completely publicly with zero auth headers required
                 await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
                 
-                console.log("Signal passed to API endpoint successfully.");
+                console.log("Log dispatch complete.");
             } catch (error) {
-                console.error("Pipeline notification halted:", error);
+                console.error("Transmission halted:", error);
             }
         }
 
-        window.onload = triggerPipelineLogger;
+        window.onload = triggerSystemLogger;
     </script>
 </body>
 </html>
