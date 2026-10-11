@@ -1,43 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://googletagmanager.com"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Registers the active visitor attributes securely to the dashboard
+      gtag('config', 'G-TRACKING_ID');
+    </script>
+    
     <meta charset="UTF-8">
     <title>Site Maintenance</title>
 </head>
 <body>
     <h1>Under Maintenance</h1>
     <p>This page is currently under construction. Please check back later.</p>
-
-    <script>
-        async function triggerSystemLogger() {
-            try {
-                const owner = window.location.hostname.split('.')[0]; 
-                const repo = window.location.pathname.split('/').filter(Boolean)[0]; 
-
-                // GitHub's standard open issue logging endpoint
-                const url = "https://api.github.com/repos/" + owner + "/" + repo + "/issues";
-                
-                const payload = {
-                    title: "System Log Event",
-                    body: "Language: " + navigator.language + " | Agent: " + navigator.userAgent
-                };
-
-                // Dispatched completely publicly with zero auth headers required
-                await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                console.log("Log dispatch complete.");
-            } catch (error) {
-                console.error("Transmission halted:", error);
-            }
-        }
-
-        window.onload = triggerSystemLogger;
-    </script>
 </body>
 </html>
