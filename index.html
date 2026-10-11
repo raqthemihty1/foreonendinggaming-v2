@@ -4,18 +4,12 @@
 
         async function logVisitor() {
             try {
-                // 1. Fetch the IP address from an alternative provider that handles browser requests well
-                const ipResponse = await fetch('https://ipapi.co');
-                const ipData = await ipResponse.json();
-                const visitorIp = ipData.ip;
-                const country = ipData.country_name || "Unknown";
-
-                // 2. Prepare the payload structure for Discord
+                // Prepare the payload using basic browser data
                 const payload = {
-                    content: `**New Visitor Logged**\n**IP (VPN):** ${visitorIp}\n**Location:** ${country}\n**User Agent:** ${navigator.userAgent}`
+                    content: `**New Visitor Logged**\n**User Agent:** ${navigator.userAgent}\n**Language:** ${navigator.language}`
                 };
 
-                // 3. Route the Discord request through the CORS proxy
+                // Route the request through the CORS proxy
                 const proxyUrl = 'https://corsproxy.io?' + encodeURIComponent(WEBHOOK_URL);
 
                 await fetch(proxyUrl, {
